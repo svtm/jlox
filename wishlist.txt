@@ -1,0 +1,6 @@
+- Support multiline comments ( /* */)
+- Handle escape sequences in string literals
+- Ternary operator
+- Unary increment/decrement operators (i++, ++i, etc)
+- +=, *=, /=
+- Bitwise operators (&, |, >>, <<)
