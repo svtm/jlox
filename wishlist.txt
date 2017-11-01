@@ -4,3 +4,6 @@
 - Unary increment/decrement operators (i++, ++i, etc)
 - +=, *=, /=
 - Bitwise operators (&, |, >>, <<)
+- break/continue
+- switch-case
+- foreach
