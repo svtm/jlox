@@ -1,5 +1,20 @@
-var a = 1;
-{
-  var a = a + 2;
-  print a;
+var cond = false;
+print "cond: " + cond;
+
+if (cond) {
+    print "cond is true";
+} else {
+    print "cond is false";
+}
+
+if (!cond) {
+    print "FALSE";
+}
+
+cond = !cond;
+print cond;
+if (cond) {
+    print "TRUE";
+} else {
+    print "FALSE";
 }
