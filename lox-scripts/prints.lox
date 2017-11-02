@@ -2,20 +2,16 @@
 multiline
 comment
 */
-/*
-var i = 0;
-while (i < 5) {
-    print i;
-    if (i == 2) {
-        break;
-    }
-    i = i + 1;
+
+var start = clock();
+fun fibonacci(n) {
+  if (n <= 1) return n;
+  return fibonacci(n - 2) + fibonacci(n - 1);
 }
 
-var a = 0;
-for (var i = 0; i < 5; i++) {
-    print i;
-    print ++a;
+for (var i = 0; i < 20; i = i + 1) {
+  print fibonacci(i);
 }
+var end = clock();
 
-print a;
+print "Execution finished in " + (end-start) + " seconds.";
