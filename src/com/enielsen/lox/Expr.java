@@ -109,9 +109,10 @@ abstract class Expr {
   }
 
   static class Unary extends Expr {
-    Unary(Token operator, Expr right) {
+    Unary(Token operator, Expr right, boolean postfix) {
       this.operator = operator;
       this.right = right;
+      this.postfix = postfix;
     }
 
     <R> R accept(Visitor<R> visitor) {
@@ -125,6 +126,7 @@ abstract class Expr {
 
     final Token operator;
     final Expr right;
+    final boolean postfix;
   }
 
   static class Variable extends Expr {

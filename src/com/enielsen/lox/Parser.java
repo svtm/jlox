@@ -237,7 +237,7 @@ class Parser {
 
     private Expr comparison() {
         return leftAssociative(this::addition, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL);
-/*        Expr expr = addition();
+/*        Expr expr = addition();int i = 0
 
         while(match(GREATER, GREATER_EQUAL, LESS, LESS_EQUAL)) {
             Token operator = previous();
@@ -275,12 +275,30 @@ class Parser {
     }
 
     private Expr unary() {
-        if (match(BANG, MINUS)) {
+        if (match(BANG, MINUS, PLUS_PLUS, MINUS_MINUS)) {
             Token operator = previous();
             Expr right = unary();
-            return new Expr.Unary(operator, right);
+            return new Expr.Unary(operator, right, false);
         }
 
+        // Unary prefix increment and decrement does not allow chaining
+        if (match(PLUS_PLUS, MINUS_MINUS)) {
+            Token operator = previous();
+            Expr right = primary();
+            return new Expr.Unary(operator, right, false);
+        }
+
+        return postfix();
+    }
+
+    private Expr postfix() {
+        if (matchNext(PLUS_PLUS, MINUS_MINUS)) {
+            Token operator = peek();
+            current--;
+            Expr left = primary();
+            advance();
+            return new Expr.Unary(operator, left, true);
+        }
         return primary();
     }
 
@@ -317,6 +335,16 @@ class Parser {
         return false;
     }
 
+    private boolean matchNext(TokenType... types) {
+        for (TokenType type : types) {
+            if (checkNext(type)) {
+                advance();
+                return true;
+            }
+        }
+        return false;
+    }
+
     private Token consume(TokenType type, String message) {
         if (check(type)) return advance();
 
@@ -328,6 +356,16 @@ class Parser {
             return false;
         }
         return peek().type == tokenType;
+    }
+
+    private boolean checkNext(TokenType tokenType) {
+        if (isAtEnd()) {
+            return false;
+        }
+        if (tokens.get(current + 1).type == EOF) {
+            return false;
+        }
+        return tokens.get(current + 1).type == tokenType;
     }
 
     private Token advance() {

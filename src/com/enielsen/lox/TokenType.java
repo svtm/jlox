@@ -10,6 +10,7 @@ enum  TokenType {
     EQUAL, EQUAL_EQUAL,
     GREATER, GREATER_EQUAL,
     LESS, LESS_EQUAL,
+    PLUS_PLUS, MINUS_MINUS,
 
     // Literals
     IDENTIFIER, STRING, NUMBER,
@@ -17,7 +18,7 @@ enum  TokenType {
     // Keywords
     AND, CLASS, ELSE, FALSE, FUN, FOR, IF, NIL, OR,
     PRINT, RETURN, SUPER, THIS, TRUE, VAR, WHILE,
-    BREAK, CONTINUE,
+    BREAK,
 
     EOF
 }

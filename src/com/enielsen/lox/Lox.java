@@ -39,7 +39,7 @@ public class Lox {
         for (;;) {
             System.out.print("> ");
             run(reader.readLine());
-            interpreter.printExpressionResult();
+            if (!hadRuntimeError) interpreter.printExpressionResult();
             hadError = false;
         }
     }

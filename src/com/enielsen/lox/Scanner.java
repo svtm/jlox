@@ -61,10 +61,11 @@ class Scanner {
             case '{': addToken(LEFT_BRACE); break;
             case '}': addToken(RIGHT_BRACE); break;
             case ',': addToken(COMMA); break;
-            case '-': addToken(MINUS); break;
-            case '+': addToken(PLUS); break;
             case ';': addToken(SEMICOLON); break;
             case '*': addToken(STAR); break;
+
+            case '-': addToken(match('-') ? MINUS_MINUS : MINUS); break;
+            case '+': addToken(match('+') ? PLUS_PLUS : PLUS); break;
 
             case '!': addToken(match('=') ? BANG_EQUAL : BANG); break;
             case '=': addToken(match('=') ? EQUAL_EQUAL: EQUAL); break;

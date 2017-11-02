@@ -7,9 +7,10 @@ while (i < 5) {
     i = i + 1;
 }
 
-for (var i = 0; i < 5; i = i + 1) {
-    if (i == 2) {
-        break;
-    }
-    print "for " + i;
+var a = 0;
+for (var i = 0; i < 5; i++) {
+    print i;
+    print ++a;
 }
+
+print a;

@@ -74,6 +74,35 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
             case MINUS:
                 checkNumberOperand(expr.operator, right);
                 return -(double)right;
+            case PLUS_PLUS: {
+                if (!(expr.right instanceof Expr.Variable)) {
+                    throw new RuntimeError(expr.operator, "Operand of increment operation must be a variable");
+                }
+                checkNumberOperand(expr.operator, right);
+                double value = (double) right;
+                Expr.Variable var = ((Expr.Variable) expr.right);
+                environment.assign(var.name, value + 1);
+                if (expr.postfix) {
+                    return value;
+                } else {
+                    return value + 1;
+                }
+            }
+            case MINUS_MINUS: {
+                // TODO: Dont Repeat Yourself
+                if (!(expr.right instanceof Expr.Variable)) {
+                    throw new RuntimeError(expr.operator, "Operand of decrement operation must be a variable");
+                }
+                checkNumberOperand(expr.operator, right);
+                double value = (double) right;
+                Expr.Variable var = ((Expr.Variable) expr.right);
+                environment.assign(var.name, value - 1);
+                if (expr.postfix) {
+                    return value;
+                } else {
+                    return value - 1;
+                }
+            }
         }
 
         // Unreachable
