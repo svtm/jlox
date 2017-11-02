@@ -4,27 +4,29 @@ import java.util.List;
 
 class LoxFunction implements LoxCallable {
 
-    private final Stmt.Function declaration;
+    private final String name;
+    private final Expr.Function function;
     private final Environment closure;
 
-    LoxFunction(Stmt.Function declaration, Environment closure) {
-        this.declaration = declaration;
+    LoxFunction(String name, Expr.Function function, Environment closure) {
+        this.name = name;
+        this.function = function;
         this.closure = closure;
     }
 
     @Override
     public int arity() {
-        return declaration.parameters.size();
+        return function.parameters.size();
     }
 
     @Override
     public Object call(Interpreter interpreter, List<Object> arguments) {
         Environment environment = new Environment(closure);
-        for (int i = 0; i < declaration.parameters.size(); i++) {
-            environment.define(declaration.parameters.get(i).lexeme, arguments.get(i));
+        for (int i = 0; i < function.parameters.size(); i++) {
+            environment.define(function.parameters.get(i).lexeme, arguments.get(i));
         }
         try {
-            interpreter.executeBlock(declaration.body, environment);
+            interpreter.executeBlock(function.body, environment);
         } catch (ReturnJump returnValue) {
             return returnValue.value;
         }
@@ -33,6 +35,10 @@ class LoxFunction implements LoxCallable {
 
     @Override
     public String toString() {
-        return "<fn " + declaration.name.lexeme + ">";
+        return "<fn " +
+                (name == null
+                        ? ">"
+                        : (name + ">")
+                );
     }
 }
