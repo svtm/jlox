@@ -78,6 +78,22 @@ class Scanner {
                     while (peek() != '\n' && !isAtEnd()) {
                         advance();
                     }
+                } else if (match('*')) {
+                    int startLine = line;
+                    // Multiline comment
+                    while ((peek() != '*' && peekNext() != '/') && !isAtEnd()) {
+                        if (peek() == '\n') {
+                            line++;
+                        }
+                        advance();
+                    }
+                    if (!isAtEnd()) {
+                        // Consume the closing '*/'
+                        advance();
+                        advance();
+                    } else {
+                        Lox.error(startLine, "Block comment not closed");
+                    }
                 } else {
                     addToken(SLASH);
                 }

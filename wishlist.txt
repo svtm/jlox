@@ -1,4 +1,3 @@
-- Support multiline comments ( /* */)
 - Handle escape sequences in string literals
 - Ternary operator
 - +=, *=, /=
