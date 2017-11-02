@@ -10,6 +10,7 @@ abstract class Stmt {
     R visitPrintStmt(Print stmt);
     R visitVarStmt(Var stmt);
     R visitWhileStmt(While stmt);
+    R visitBreakStmt(Break stmt);
   }
 
   static class Block extends Stmt {
@@ -19,6 +20,11 @@ abstract class Stmt {
 
     <R> R accept(Visitor<R> visitor) {
       return visitor.visitBlockStmt(this);
+    }
+
+    @Override
+    public String toString() {
+      return "BlockStmt";
     }
 
     final List<Stmt> statements;
@@ -31,6 +37,11 @@ abstract class Stmt {
 
     <R> R accept(Visitor<R> visitor) {
       return visitor.visitExpressionStmt(this);
+    }
+
+    @Override
+    public String toString() {
+      return "ExpressionStmt";
     }
 
     final Expr expression;
@@ -47,6 +58,11 @@ abstract class Stmt {
       return visitor.visitIfStmt(this);
     }
 
+    @Override
+    public String toString() {
+      return "IfStmt";
+    }
+
     final Expr condition;
     final Stmt thenBranch;
     final Stmt elseBranch;
@@ -61,6 +77,11 @@ abstract class Stmt {
       return visitor.visitPrintStmt(this);
     }
 
+    @Override
+    public String toString() {
+      return "PrintStmt";
+    }
+
     final Expr expression;
   }
 
@@ -72,6 +93,11 @@ abstract class Stmt {
 
     <R> R accept(Visitor<R> visitor) {
       return visitor.visitVarStmt(this);
+    }
+
+    @Override
+    public String toString() {
+      return "VarStmt";
     }
 
     final Token name;
@@ -88,8 +114,27 @@ abstract class Stmt {
       return visitor.visitWhileStmt(this);
     }
 
+    @Override
+    public String toString() {
+      return "WhileStmt";
+    }
+
     final Expr condition;
     final Stmt body;
+  }
+
+  static class Break extends Stmt {
+    Break() {
+    }
+
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitBreakStmt(this);
+    }
+
+    @Override
+    public String toString() {
+      return "BreakStmt";
+    }
   }
 
   abstract <R> R accept(Visitor<R> visitor);

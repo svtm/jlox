@@ -23,6 +23,11 @@ abstract class Expr {
       return visitor.visitAssignExpr(this);
     }
 
+    @Override
+    public String toString() {
+      return "AssignExpr";
+    }
+
     final Token name;
     final Expr value;
   }
@@ -36,6 +41,11 @@ abstract class Expr {
 
     <R> R accept(Visitor<R> visitor) {
       return visitor.visitBinaryExpr(this);
+    }
+
+    @Override
+    public String toString() {
+      return "BinaryExpr";
     }
 
     final Expr left;
@@ -52,6 +62,11 @@ abstract class Expr {
       return visitor.visitGroupingExpr(this);
     }
 
+    @Override
+    public String toString() {
+      return "GroupingExpr";
+    }
+
     final Expr expression;
   }
 
@@ -62,6 +77,11 @@ abstract class Expr {
 
     <R> R accept(Visitor<R> visitor) {
       return visitor.visitLiteralExpr(this);
+    }
+
+    @Override
+    public String toString() {
+      return "LiteralExpr";
     }
 
     final Object value;
@@ -76,6 +96,11 @@ abstract class Expr {
 
     <R> R accept(Visitor<R> visitor) {
       return visitor.visitLogicalExpr(this);
+    }
+
+    @Override
+    public String toString() {
+      return "LogicalExpr";
     }
 
     final Expr left;
@@ -93,6 +118,11 @@ abstract class Expr {
       return visitor.visitUnaryExpr(this);
     }
 
+    @Override
+    public String toString() {
+      return "UnaryExpr";
+    }
+
     final Token operator;
     final Expr right;
   }
@@ -104,6 +134,11 @@ abstract class Expr {
 
     <R> R accept(Visitor<R> visitor) {
       return visitor.visitVariableExpr(this);
+    }
+
+    @Override
+    public String toString() {
+      return "VariableExpr";
     }
 
     final Token name;

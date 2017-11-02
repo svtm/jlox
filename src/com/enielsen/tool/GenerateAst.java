@@ -27,7 +27,8 @@ public class GenerateAst {
                 "If         : Expr condition, Stmt thenBranch, Stmt elseBranch",
                 "Print      : Expr expression",
                 "Var        : Token name, Expr initializer",
-                "While      : Expr condition, Stmt body"
+                "While      : Expr condition, Stmt body",
+                "Break      : "
         ));
     }
 
@@ -78,10 +79,12 @@ public class GenerateAst {
         writer.println("    " + className + "(" + fieldList + ") {");
 
         // Store parameters in fields.
-        String[] fields = fieldList.split(", ");
-        for (String field : fields) {
-            String name = field.split(" ")[1];
-            writer.println("      this." + name + " = " + name + ";");
+        if (!fieldList.isEmpty()) {
+            String[] fields = fieldList.split(", ");
+            for (String field : fields) {
+                String name = field.split(" ")[1];
+                writer.println("      this." + name + " = " + name + ";");
+            }
         }
 
         writer.println("    }");
@@ -92,12 +95,20 @@ public class GenerateAst {
         writer.println("      return visitor.visit" + className + baseName + "(this);");
         writer.println("    }");
 
-        // Fields.
+        // toString
         writer.println();
-        for (String field : fields) {
-            writer.println("    final " + field + ";");
-        }
+        writer.println("    @Override");
+        writer.println("    public String toString() {");
+        writer.println("      return \"" + className + baseName + "\";");
+        writer.println("    }");
 
+        if (!fieldList.isEmpty()) {
+            // Fields.
+            writer.println();
+            for (String field : fieldList.split(", ")) {
+                writer.println("    final " + field + ";");
+            }
+        }
         writer.println("  }");
     }
 }

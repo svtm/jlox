@@ -22,14 +22,12 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
     void executeBlock(List<Stmt> statements, Environment environment) {
         Environment previous = this.environment;
-        try {
+        try{
             this.environment = environment;
 
             for (Stmt statement : statements) {
                 execute(statement);
             }
-        } catch (RuntimeError error) {
-            Lox.runtimeError(error); //catch-block not in book
         } finally {
             this.environment = previous;
         }
@@ -188,7 +186,11 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     @Override
     public Void visitWhileStmt(Stmt.While stmt) {
         while (isTruthy(evaluate(stmt.condition))) {
-            execute(stmt.body);
+            try {
+                execute(stmt.body);
+            } catch (BreakJump jump) {
+                break;
+            }
         }
         return null;
     }
@@ -199,6 +201,12 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         prevResult = null;
         return null;
     }
+
+    @Override
+    public Void visitBreakStmt(Stmt.Break stmt) {
+        throw new BreakJump();
+    }
+
 
     /* Helper methods */
 

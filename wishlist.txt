@@ -4,6 +4,6 @@
 - Unary increment/decrement operators (i++, ++i, etc)
 - +=, *=, /=
 - Bitwise operators (&, |, >>, <<)
-- break/continue
+- continue (easy to make it work for 'while', hard for 'for')
 - switch-case
 - foreach

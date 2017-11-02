@@ -1,34 +1,15 @@
-var cond = false;
-print "cond: " + cond;
-
-if (cond) {
-    print "cond is true";
-} else {
-    print "cond is false";
-}
-
-if (!cond) {
-    print "FALSE";
-}
-
-cond = !cond;
-print cond;
-if (cond) {
-    print "TRUE";
-} else {
-    print "FALSE";
-}
-
-
-print "hi" or 2; // "hi".
-print nil or "yes"; // "yes".
-
 var i = 0;
 while (i < 5) {
     print i;
+    if (i == 2) {
+        break;
+    }
     i = i + 1;
 }
 
 for (var i = 0; i < 5; i = i + 1) {
+    if (i == 2) {
+        break;
+    }
     print "for " + i;
 }
