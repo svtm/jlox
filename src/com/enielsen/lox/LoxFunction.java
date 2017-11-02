@@ -35,10 +35,10 @@ class LoxFunction implements LoxCallable {
 
     @Override
     public String toString() {
-        return "<fn " +
+        return "<fn" +
                 (name == null
                         ? ">"
-                        : (name + ">")
+                        : (" " + name + ">")
                 );
     }
 }
