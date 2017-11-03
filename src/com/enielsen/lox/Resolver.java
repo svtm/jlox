@@ -4,10 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
     private final Interpreter interpreter;
-    private final Stack<Map<String, Boolean>> scopes = new Stack<>();
+    private final Stack<Map<String, Variable>> scopes = new Stack<>();
     private FunctionType currentFunction = FunctionType.NONE;
 
     Resolver(Interpreter interpreter) {
@@ -17,6 +18,22 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
     private enum FunctionType {
         NONE,
         FUNCTION
+    }
+
+    private static class Variable {
+        final Token name;
+        VariableState state;
+
+        public Variable(Token name, VariableState state) {
+            this.name = name;
+            this.state = state;
+        }
+    }
+
+    private enum VariableState {
+        DECLARED,
+        DEFINED,
+        READ
     }
 
     void resolve(List<Stmt> statements) {
@@ -93,8 +110,8 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
         declare(stmt.name);
         if (stmt.initializer != null) {
             resolve(stmt.initializer);
+            define(stmt.name);
         }
-        define(stmt.name);
         return null;
     }
 
@@ -107,7 +124,9 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
 
     @Override
     public Void visitVariableExpr(Expr.Variable expr) {
-        if (!scopes.isEmpty() && scopes.peek().get(expr.name.lexeme) == Boolean.FALSE) {
+        if (!scopes.isEmpty()
+                && scopes.peek().containsKey(expr.name.lexeme)
+                && scopes.peek().get(expr.name.lexeme).state == VariableState.DECLARED) {
             Lox.error(expr.name, "Cannot read local variable in its own initializer.");
         }
 
@@ -184,29 +203,42 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
     }
 
     private void endScope() {
-        scopes.pop();
+        Map<String, Variable> scope = scopes.pop();
+        List<Variable> unread = scope.entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().state != VariableState.READ)
+                .map(Map.Entry::getValue)
+                .collect(Collectors.toList());
+        unread.stream()
+                .filter(var -> var.state == VariableState.DECLARED)
+                .forEach(var -> Lox.warning(var.name, "Local variable never defined."));
+        unread.stream()
+                .filter(var -> var.state == VariableState.DEFINED)
+                .forEach(var -> Lox.warning(var.name, "Local variable never used."));
+                //.forEach(var -> Lox.warning(var.name, "Local variable is not used."));
     }
 
     private void declare(Token name) {
         if (scopes.isEmpty()) return;
 
-        Map<String, Boolean> scope = scopes.peek();
+        Map<String, Variable> scope = scopes.peek();
         if (scope.containsKey(name.lexeme)) {
             Lox.error(name, "Variable with this name already declared in this scope.");
         }
-        scope.put(name.lexeme, false);
+        scope.put(name.lexeme, new Variable(name, VariableState.DECLARED));
     }
 
     private void define(Token name) {
         if (scopes.isEmpty()) return;
 
-        scopes.peek().put(name.lexeme, true);
+        scopes.peek().get(name.lexeme).state = VariableState.DEFINED;
     }
 
     private void resolveLocal(Expr expr, Token name) {
         for (int i = scopes.size() - 1; i >= 0; i--) {
             if (scopes.get(i).containsKey(name.lexeme)) {
                 interpreter.resolve(expr, scopes.size() - 1 - i);
+                scopes.get(i).get(name.lexeme).state = VariableState.READ;
                 return;
             }
         }
