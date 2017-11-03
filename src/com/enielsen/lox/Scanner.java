@@ -81,7 +81,10 @@ class Scanner {
                 } else if (match('*')) {
                     int startLine = line;
                     // Multiline comment
-                    while ((peek() != '*' && peekNext() != '/') && !isAtEnd()) {
+                    while (!isAtEnd()) {
+                        if (peek() == '*' && peekNext() == '/') {
+                            break;
+                        }
                         if (peek() == '\n') {
                             line++;
                         }
