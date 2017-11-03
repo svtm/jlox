@@ -16,6 +16,7 @@ class Parser {
     private final List<Token> tokens;
     private int current = 0;
     private int loopLevel = 0; // keep track of how deep our loops are for break statements
+    private boolean inClass = false; // keep track of if we are currently parsing a class declaration
 
     Parser(List<Token> tokens) {
         this.tokens = tokens;
@@ -56,13 +57,15 @@ class Parser {
         consume(LEFT_BRACE, "Expect '{' before class body.");
 
         List<Stmt.Function> methods = new ArrayList<>();
+        List<Stmt.Function> classMethods = new ArrayList<>();
         while (!check(RIGHT_BRACE) && !isAtEnd()) {
-            methods.add(function("method"));
+            boolean isClassMethod = match(CLASS);
+            (isClassMethod ? classMethods : methods).add(function("method"));
         }
 
         consume(RIGHT_BRACE, "Expect '}' after class body.");
 
-        return new Stmt.Class(name, methods);
+        return new Stmt.Class(name, methods, classMethods);
     }
 
     private Stmt statement() {
@@ -206,7 +209,7 @@ class Parser {
         }
         consume(RIGHT_PAREN, "Expect ')' after parameters.");
 
-        consume(LEFT_BRACE, "Expect '{' before " + kind + " function");
+        consume(LEFT_BRACE, "Expect '{' before " + kind);
         List<Stmt> body = block();
         return new Expr.Function(parameters, body);
     }

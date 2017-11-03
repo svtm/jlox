@@ -7,4 +7,13 @@ class MyClass {
 var myInstance = MyClass();
 print myInstance.sum(2, 3);
 
-//this.field = "hello"; // should throw error
+class Math {
+  class square(n) {
+    return n * n;
+  }
+}
+
+print Math.square(3); // Prints "9".
+
+Math.pi = 3.14;
+print Math.pi;
