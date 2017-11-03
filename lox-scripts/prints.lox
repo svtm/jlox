@@ -1,9 +1,10 @@
-{
-    var a;
+class MyClass {
+    sum(a, b) {
+        return a + b;
+    }
 }
 
-{
-    var b = 4;
-    var c = 2;
-    print c;
-}
+var myInstance = MyClass();
+print myInstance.sum(2, 3);
+
+//this.field = "hello"; // should throw error

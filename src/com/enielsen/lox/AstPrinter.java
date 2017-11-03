@@ -2,6 +2,7 @@ package com.enielsen.lox;
 
 
 // This class should return a string representation of AST nodes, but is currently pretty bad
+//TODO implement
 class AstPrinter implements Expr.Visitor<String> {
     String print(Expr expr) {
         return expr.accept(this);
@@ -64,6 +65,21 @@ class AstPrinter implements Expr.Visitor<String> {
 
     @Override
     public String visitFunctionExpr(Expr.Function expr) {
+        return ""; //TODO
+    }
+
+    @Override
+    public String visitGetExpr(Expr.Get expr) {
+        return ""; //TODO
+    }
+
+    @Override
+    public String visitSetExpr(Expr.Set expr) {
+        return ""; //TODO
+    }
+
+    @Override
+    public String visitThisExpr(Expr.This expr) {
         return ""; //TODO
     }
 }
