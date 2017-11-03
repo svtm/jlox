@@ -1,6 +1,9 @@
 # jlox
 My implementation of jlox, a Lox interpreter written in Java. Implemented after following the book http://www.craftinginterpreters.com
 
+### Project status
+Completed chapter 11
+
 ### Extra features:
 * Break out of loops with ```break;```
 * Unary prefix and postfix increment/decrement operators (```i++, ++i, i--, --i```)
