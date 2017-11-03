@@ -2,7 +2,7 @@
 My implementation of jlox, a Lox interpreter written in Java. Implemented after following the book http://www.craftinginterpreters.com
 
 ### Project status
-Completed chapter 11
+Completed chapter 12
 
 ### Extra features:
 * Break out of loops with ```break;```
