@@ -26,7 +26,7 @@ public class GenerateAst {
         defineAst(outputDir, "Stmt", Arrays.asList(
                 "Block      : List<Stmt> statements",
                 "Expression : Expr expression",
-                "Function   : Token name, Expr.Function body", // Todo: not specialize? i think it's okay though
+                "Function   : Token name, Expr.Function function", // Todo: not specialize? i think it's okay though
                 "If         : Expr condition, Stmt thenBranch, Stmt elseBranch",
                 "Print      : Expr expression",
                 "Return     : Token keyword, Expr value",

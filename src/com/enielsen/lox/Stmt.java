@@ -50,9 +50,9 @@ abstract class Stmt {
   }
 
   static class Function extends Stmt {
-    Function(Token name, Expr.Function body) {
+    Function(Token name, Expr.Function function) {
       this.name = name;
-      this.body = body;
+      this.function = function;
     }
 
     <R> R accept(Visitor<R> visitor) {
@@ -65,7 +65,7 @@ abstract class Stmt {
     }
 
     final Token name;
-    final Expr.Function body;
+    final Expr.Function function;
   }
 
   static class If extends Stmt {

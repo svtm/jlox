@@ -13,13 +13,13 @@ counter(); // "1".
 counter(); // "2".
 
 fun thrice(fn) {
-  for (var i = 1; i <= 3; i = i + 1) {
+  for (var i = 1; i <= 3; i++) {
     fn(i);
   }
 }
 
 thrice(fun (a) {
-  print a;
+  print "fun"+a;
 });
 
 var test = fun (a) {
