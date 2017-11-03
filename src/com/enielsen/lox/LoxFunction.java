@@ -16,6 +16,10 @@ class LoxFunction implements LoxCallable {
         this.isInitializer = isInitializer;
     }
 
+    boolean isGetter() {
+        return function.parameters == null;
+    }
+
     LoxFunction bind(LoxInstance instance) {
         Environment environment = new Environment(closure);
         environment.define("this", instance);
@@ -30,9 +34,12 @@ class LoxFunction implements LoxCallable {
     @Override
     public Object call(Interpreter interpreter, List<Object> arguments) {
         Environment environment = new Environment(closure);
-        for (int i = 0; i < function.parameters.size(); i++) {
-            environment.define(function.parameters.get(i).lexeme, arguments.get(i));
+        if (function.parameters != null) {
+            for (int i = 0; i < function.parameters.size(); i++) {
+                environment.define(function.parameters.get(i).lexeme, arguments.get(i));
+            }
         }
+
         try {
             interpreter.executeBlock(function.body, environment);
         } catch (ReturnJump returnValue) {

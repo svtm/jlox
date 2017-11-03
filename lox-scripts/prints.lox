@@ -5,6 +5,7 @@ class MyClass {
 }
 
 var myInstance = MyClass();
+
 print myInstance.sum(2, 3);
 
 class Math {
@@ -17,3 +18,16 @@ print Math.square(3); // Prints "9".
 
 Math.pi = 3.14;
 print Math.pi;
+
+class Circle {
+    init(radius) {
+        this.radius = radius;
+    }
+
+    area {
+        return Math.pi * this.radius*this.radius;
+    }
+}
+
+var circle = Circle(2);
+print circle.area;
