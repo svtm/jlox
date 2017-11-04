@@ -166,6 +166,14 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
     }
 
     @Override
+    public Void visitConditionalExpr(Expr.Conditional expr) {
+        resolve(expr.condition);
+        resolve(expr.thenBranch);
+        resolve(expr.elseBranch);
+        return null;
+    }
+
+    @Override
     public Void visitVariableExpr(Expr.Variable expr) {
         if (!scopes.isEmpty()
                 && scopes.peek().containsKey(expr.name.lexeme)

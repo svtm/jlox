@@ -31,3 +31,7 @@ class Circle {
 
 var circle = Circle(2);
 print circle.area;
+
+var a = (true) ? "true" : "false";
+
+print a;

@@ -82,4 +82,9 @@ class AstPrinter implements Expr.Visitor<String> {
     public String visitThisExpr(Expr.This expr) {
         return ""; //TODO
     }
+
+    @Override
+    public String visitConditionalExpr(Expr.Conditional expr) {
+        return ""; //TODO
+    }
 }

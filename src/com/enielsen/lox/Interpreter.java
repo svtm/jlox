@@ -258,6 +258,14 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         return value;
     }
 
+    @Override
+    public Object visitConditionalExpr(Expr.Conditional expr) {
+        if (isTruthy(evaluate(expr.condition))) {
+            return evaluate(expr.thenBranch);
+        } else {
+            return evaluate(expr.elseBranch);
+        }
+    }
 
     /* Statement Visitor implementations */
 

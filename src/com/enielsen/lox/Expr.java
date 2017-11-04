@@ -5,6 +5,7 @@ import java.util.List;
 abstract class Expr {
   interface Visitor<R> {
     R visitAssignExpr(Assign expr);
+    R visitConditionalExpr(Conditional expr);
     R visitBinaryExpr(Binary expr);
     R visitCallExpr(Call expr);
     R visitGetExpr(Get expr);
@@ -35,6 +36,27 @@ abstract class Expr {
 
     final Token name;
     final Expr value;
+  }
+
+  static class Conditional extends Expr {
+    Conditional(Expr condition, Expr thenBranch, Expr elseBranch) {
+      this.condition = condition;
+      this.thenBranch = thenBranch;
+      this.elseBranch = elseBranch;
+    }
+
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitConditionalExpr(this);
+    }
+
+    @Override
+    public String toString() {
+      return "ConditionalExpr";
+    }
+
+    final Expr condition;
+    final Expr thenBranch;
+    final Expr elseBranch;
   }
 
   static class Binary extends Expr {

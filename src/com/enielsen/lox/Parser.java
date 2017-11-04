@@ -230,7 +230,7 @@ class Parser {
     }
 
     private Expr assignment() {
-        Expr expr = or();
+        Expr expr = conditional();
 
         if (match(EQUAL)) {
             Token equals = previous();
@@ -245,6 +245,18 @@ class Parser {
             }
 
             error(equals, "Invalid assignment target.");
+        }
+        return expr;
+    }
+
+    private Expr conditional() {
+        Expr expr = or();
+
+        if (match(QUESTION_MARK)) {
+            Expr thenBranch = expression();
+            consume(COLON, "Expect ':' after then-branch of conditional expression.");
+            Expr elseBranch = conditional();
+            expr = new Expr.Conditional(expr, thenBranch, elseBranch);
         }
         return expr;
     }
