@@ -19,6 +19,10 @@ class Environment {
         values.put(name, value);
     }
 
+    boolean isDefined(String name) {
+        return values.containsKey(name);
+    }
+
     Object getAt(int distance, String name) {
         return ancestor(distance).values.get(name);
     }

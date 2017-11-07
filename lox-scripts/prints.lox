@@ -1,37 +1,38 @@
-class MyClass {
-    sum(a, b) {
-        return a + b;
-    }
-}
-
-var myInstance = MyClass();
-
-print myInstance.sum(2, 3);
-
-class Math {
-  class square(n) {
-    return n * n;
-  }
-}
-
-print Math.square(3); // Prints "9".
-
-Math.pi = 3.14;
-print Math.pi;
-
-class Circle {
-    init(radius) {
-        this.radius = radius;
+{
+    class Super {
+        hello() {
+            print "super";
+        }
     }
 
-    area {
-        return Math.pi * this.radius*this.radius;
+    class Sub < Super {
+        hi() {
+            super.hello();
+            print "sub";
+        }
     }
+
+    class Subsub < Sub {
+        hello() {
+            print "subsub";
+        }
+    }
+
+    var sc = Super();
+    print "Super::hello, expect 'super'";
+    sc.hello();
+
+    var sub = Sub();
+    var subsub = Subsub();
+
+    print "Sub::hello, expect 'super'";
+    sub.hello();
+    print "Sub::hi, expect 'super <newline> sub'";
+    sub.hi();
+
+    print "Subsub::hello, expect 'subsub'";
+    subsub.hello();
+    print "Subsub::hi, expect 'super <newline> sub'";
+    subsub.hi();
+
 }
-
-var circle = Circle(2);
-print circle.area;
-
-var a = (true) ? "true" : "false";
-
-print a;

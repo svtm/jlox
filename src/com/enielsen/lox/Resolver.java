@@ -25,7 +25,8 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
 
     private enum ClassType {
         NONE,
-        CLASS
+        CLASS,
+        SUBCLASS
     }
 
     private static class Variable {
@@ -67,6 +68,13 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
         ClassType enclosingClass = currentClass;
         currentClass = ClassType.CLASS;
 
+        if (stmt.superClass != null) {
+            currentClass = ClassType.SUBCLASS;
+            resolve(stmt.superClass);
+            beginScope();
+            scopes.peek().put("super", new Variable(null, VariableState.READ));
+        }
+
         beginScope();
         // sortof a hack, "this" has no token, assume always READ to prevent warnings
         scopes.peek().put("this", new Variable(null, VariableState.READ));
@@ -86,9 +94,14 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
         }
         endScope();
 
+        if (currentClass == ClassType.SUBCLASS) {
+            endScope();
+        }
+
         currentClass = enclosingClass;
         return null;
     }
+
 
     @Override
     public Void visitExpressionStmt(Stmt.Expression stmt) {
@@ -247,6 +260,18 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
     }
 
     @Override
+    public Void visitSuperExpr(Expr.Super expr) {
+        if (currentClass == ClassType.NONE) {
+            Lox.error(expr.keyword, "Cannot use 'super' outside of a class.");
+        } else if (currentClass != ClassType.SUBCLASS) {
+            Lox.error(expr.keyword, "Cannot use 'super' in class without a superclass.");
+        } else {
+            resolveLocal(expr, expr.keyword);
+        }
+        return null;
+    }
+
+    @Override
     public Void visitUnaryExpr(Expr.Unary expr) {
         resolve(expr.right);
         return null;
@@ -319,6 +344,15 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
             }
         }
         // Not found, assume it's global
+    }
+
+    private boolean superExists(Token name) {
+        for (int i = scopes.size() -1 ; i >= 0; i--) {
+            if (scopes.get(i).containsKey(name.lexeme)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void resolveFunction(Expr.Function function, FunctionType type) {
