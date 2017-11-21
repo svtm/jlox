@@ -15,3 +15,4 @@ Completed chapter 12
 * Ternary conditional operator
 * Static methods (denoted by keyword ```class``` in before method name)
 * Class getter-methods (denoted by method without parens in class declaration)
+* lists/arrays
