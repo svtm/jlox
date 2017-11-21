@@ -8,3 +8,4 @@
 - varargs
 - lambdas
 - remove print as keyword, now that it is a native function
+- slicing arrays (and strings?)

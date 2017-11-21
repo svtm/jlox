@@ -92,4 +92,19 @@ class AstPrinter implements Expr.Visitor<String> {
     public String visitSuperExpr(Expr.Super expr) {
         return ""; //TODO
     }
+
+    @Override
+    public String visitArrayExpr(Expr.Array expr) {
+        return ""; //TODO
+    }
+
+    @Override
+    public String visitIndexGetExpr(Expr.IndexGet expr) {
+        return ""; //TODO
+    }
+
+    @Override
+    public String visitIndexSetExpr(Expr.IndexSet expr) {
+        return ""; //TODO
+    }
 }

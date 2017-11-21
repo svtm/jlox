@@ -199,6 +199,12 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
     }
 
     @Override
+    public Void visitArrayExpr(Expr.Array expr) {
+        expr.elements.forEach(this::resolve);
+        return null;
+    }
+
+    @Override
     public Void visitBinaryExpr(Expr.Binary expr) {
         resolve(expr.left);
         resolve(expr.right);
@@ -218,6 +224,13 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
     @Override
     public Void visitGetExpr(Expr.Get expr) {
         resolve(expr.object);
+        return null;
+    }
+
+    @Override
+    public Void visitIndexGetExpr(Expr.IndexGet expr) {
+        resolve(expr.indexee);
+        resolve(expr.index);
         return null;
     }
 
@@ -245,6 +258,14 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void>{
         // TODO: (nicetohave) warn if setting field shadows class method
         resolve(expr.value);
         resolve(expr.object);
+        return null;
+    }
+
+    @Override
+    public Void visitIndexSetExpr(Expr.IndexSet expr) {
+        resolve(expr.value);
+        resolve(expr.indexee);
+        resolve(expr.index);
         return null;
     }
 

@@ -8,7 +8,10 @@ abstract class Expr {
     R visitConditionalExpr(Conditional expr);
     R visitBinaryExpr(Binary expr);
     R visitCallExpr(Call expr);
+    R visitArrayExpr(Array expr);
     R visitGetExpr(Get expr);
+    R visitIndexGetExpr(IndexGet expr);
+    R visitIndexSetExpr(IndexSet expr);
     R visitGroupingExpr(Grouping expr);
     R visitLiteralExpr(Literal expr);
     R visitLogicalExpr(Logical expr);
@@ -102,6 +105,25 @@ abstract class Expr {
     final List<Expr> arguments;
   }
 
+  static class Array extends Expr {
+    Array(Token bracket, List<Expr> elements) {
+      this.bracket = bracket;
+      this.elements = elements;
+    }
+
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitArrayExpr(this);
+    }
+
+    @Override
+    public String toString() {
+      return "ArrayExpr";
+    }
+
+    final Token bracket;
+    final List<Expr> elements;
+  }
+
   static class Get extends Expr {
     Get(Expr object, Token name) {
       this.object = object;
@@ -119,6 +141,50 @@ abstract class Expr {
 
     final Expr object;
     final Token name;
+  }
+
+  static class IndexGet extends Expr {
+    IndexGet(Expr indexee, Token bracket, Expr index) {
+      this.indexee = indexee;
+      this.bracket = bracket;
+      this.index = index;
+    }
+
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitIndexGetExpr(this);
+    }
+
+    @Override
+    public String toString() {
+      return "IndexGetExpr";
+    }
+
+    final Expr indexee;
+    final Token bracket;
+    final Expr index;
+  }
+
+  static class IndexSet extends Expr {
+    IndexSet(Expr indexee, Token bracket, Expr index, Expr value) {
+      this.indexee = indexee;
+      this.bracket = bracket;
+      this.index = index;
+      this.value = value;
+    }
+
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitIndexSetExpr(this);
+    }
+
+    @Override
+    public String toString() {
+      return "IndexSetExpr";
+    }
+
+    final Expr indexee;
+    final Token bracket;
+    final Expr index;
+    final Expr value;
   }
 
   static class Grouping extends Expr {

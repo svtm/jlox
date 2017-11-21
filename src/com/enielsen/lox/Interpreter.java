@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     final Environment globals = new Environment();
@@ -86,6 +87,20 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     }
 
     @Override
+    public Object visitIndexSetExpr(Expr.IndexSet expr) {
+        Object indexee = evaluate(expr.indexee);
+
+        if (!(indexee instanceof LoxIndexable)) {
+            throw new RuntimeError(expr.bracket, "Variable is not indexable.");
+        }
+
+        Object index = evaluate(expr.index);
+        Object value = evaluate(expr.value);
+        ((LoxIndexable) indexee).set(expr.bracket, index, value);
+        return value;
+    }
+
+    @Override
     public Object visitThisExpr(Expr.This expr) {
         return lookupVariable(expr.keyword, expr);
     }
@@ -111,6 +126,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     public Object visitGroupingExpr(Expr.Grouping expr) {
         return evaluate(expr.expression);
     }
+
 
     @Override
     public Object visitUnaryExpr(Expr.Unary expr) {
@@ -235,12 +251,26 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
             throw new RuntimeError(expr.paren, "Can only call functions and classes.");
         }
 
-        LoxCallable function = (LoxCallable)callee;
+        LoxCallable function = (LoxCallable) callee;
         if (arguments.size() != function.arity() && !function.variadic()) {
             throw new RuntimeError(expr.paren,
                     "Expected " + function.arity() + " arguments but got" + arguments.size() + ".");
         }
-        return function.call(this, arguments);
+        try {
+            return function.call(this, arguments);
+        } catch (NativeError e) {
+            throw new RuntimeError(expr.paren, e.getMessage());
+        }
+    }
+
+    @Override
+    public Object visitIndexGetExpr(Expr.IndexGet expr) {
+        Object indexee = evaluate(expr.indexee);
+        Object index = evaluate(expr.index);
+        if (indexee instanceof LoxIndexable) {
+            return ((LoxIndexable) indexee).get(expr.bracket, index);
+        }
+        return null;
     }
 
     @Override
@@ -253,6 +283,9 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
             }
             return result;
         }
+        if (object instanceof LoxArray) {
+            return ((LoxArray) object).getMethod(expr.name);
+        }
 
         throw new RuntimeError(expr.name, "Only instances have properties.");
     }
@@ -260,6 +293,13 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     @Override
     public Object visitFunctionExpr(Expr.Function expr) {
         return new LoxFunction(null, expr, environment, false);
+    }
+
+    @Override
+    public Object visitArrayExpr(Expr.Array expr) {
+        return new LoxArray(expr.elements.stream()
+                .map(this::evaluate)
+                .collect(Collectors.toList()));
     }
 
     @Override
@@ -457,6 +497,14 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
                 text = text.substring(0, text.length() - 2);
             }
             return text;
+        }
+
+        if (object instanceof LoxArray) {
+            List<String> elementStrings = ((LoxArray) object).elements
+                    .stream()
+                    .map(this::stringify)
+                    .collect(Collectors.toList());
+            return "[" + String.join(", ", elementStrings) + "]";
         }
 
         return object.toString();

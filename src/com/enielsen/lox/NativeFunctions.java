@@ -10,6 +10,7 @@ abstract class NativeFunctions {
         environment.define("clock", clock);
         environment.define("print", print);
         environment.define("prompt", prompt);
+        environment.define("list", list);
     }
 
     private static final LoxCallable clock = new LoxCallable() {
@@ -62,6 +63,23 @@ abstract class NativeFunctions {
                     .collect(Collectors.joining(" ")));
             java.util.Scanner sc = new Scanner(System.in);
             return sc.nextLine();
+        }
+    };
+
+    private static final LoxCallable list = new LoxCallable() {
+        @Override
+        public int arity() {
+            return 0;
+        }
+
+        @Override
+        public boolean variadic() {
+            return true;
+        }
+
+        @Override
+        public Object call(Interpreter interpreter, List<Object> arguments) {
+            return new LoxArray(arguments);
         }
     };
 }

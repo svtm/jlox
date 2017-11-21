@@ -1,38 +1,21 @@
-{
-    class Super {
-        hello() {
-            print "super";
-        }
-    }
+var arr = [1, 2, 3];
 
-    class Sub < Super {
-        hi() {
-            super.hello();
-            print "sub";
-        }
-    }
+print arr;
 
-    class Subsub < Sub {
-        hello() {
-            print "subsub";
-        }
-    }
-
-    var sc = Super();
-    print "Super::hello, expect 'super'";
-    sc.hello();
-
-    var sub = Sub();
-    var subsub = Subsub();
-
-    print "Sub::hello, expect 'super'";
-    sub.hello();
-    print "Sub::hi, expect 'super <newline> sub'";
-    sub.hi();
-
-    print "Subsub::hello, expect 'subsub'";
-    subsub.hello();
-    print "Subsub::hi, expect 'super <newline> sub'";
-    subsub.hi();
-
+while (!arr.isEmpty()) {
+    print arr.pop();
 }
+
+print arr;
+
+for (var i = 0; i < 10; i++) {
+    arr.add(i);
+}
+
+print arr;
+
+arr[2] = "abc";
+print arr;
+
+arr[-1] = true;
+print arr;
